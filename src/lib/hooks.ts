@@ -129,6 +129,41 @@ export function useScrollLock(locked: boolean) {
   }, [locked]);
 }
 
+export type Theme = "dark" | "light";
+
+/**
+ * The live theme, read from `data-theme` on <html>.
+ *
+ * The attribute is the source of truth — it's set pre-paint by the inline
+ * script in the layout, and anything may change it (the toggle, the command
+ * palette). Subscribing via MutationObserver means every consumer stays in
+ * sync no matter which one made the change.
+ */
+export function useTheme(): Theme {
+  return useSyncExternalStore(
+    (onChange) => {
+      const observer = new MutationObserver(onChange);
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+      return () => observer.disconnect();
+    },
+    () => (document.documentElement.dataset.theme === "light" ? "light" : "dark"),
+    () => "dark",
+  );
+}
+
+/** Applies a theme and remembers it. */
+export function setTheme(theme: Theme) {
+  document.documentElement.dataset.theme = theme;
+  try {
+    localStorage.setItem("theme", theme);
+  } catch {
+    // Private browsing — the change still applies for this session.
+  }
+}
+
 /**
  * Copy-to-clipboard with a self-resetting "copied" flag.
  * Falls back to a hidden textarea where the async Clipboard API is blocked

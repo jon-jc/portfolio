@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 
+import { CommandPalette } from "@/components/ui/CommandPalette";
+import { Cursor } from "@/components/ui/Cursor";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -115,7 +118,11 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+
+        <ScrollProgress />
+        <Cursor />
         {children}
+        <CommandPalette />
       </body>
     </html>
   );
