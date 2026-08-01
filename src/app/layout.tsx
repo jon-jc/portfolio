@@ -1,30 +1,38 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 
+import { Footer } from "@/components/layout/Footer";
 import { CommandPalette } from "@/components/ui/CommandPalette";
 import { Cursor } from "@/components/ui/Cursor";
+import { Grain } from "@/components/ui/Grain";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { site } from "@/lib/site";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sans = Instrument_Sans({
+  variable: "--font-sans-src",
   subsets: ["latin"],
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const mono = JetBrains_Mono({
+  variable: "--font-mono-src",
   subsets: ["latin"],
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+/**
+ * Fraunces is variable across weight, optical size and its own SOFT axis.
+ * Requesting the axes explicitly keeps the display face from falling back to
+ * the default optical size at headline sizes, where it looks noticeably
+ * blunter than it should.
+ */
+const display = Fraunces({
+  variable: "--font-display-src",
   subsets: ["latin"],
-  weight: "400",
   style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
   display: "swap",
 });
 
@@ -71,8 +79,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0c" },
-    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#141210" },
+    { media: "(prefers-color-scheme: light)", color: "#fbf9f7" },
   ],
   colorScheme: "dark light",
 };
@@ -106,7 +114,7 @@ export default function RootLayout({
       data-theme="dark"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${sans.variable} ${mono.variable} ${display.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
@@ -120,8 +128,10 @@ export default function RootLayout({
         </a>
 
         <ScrollProgress />
+        <Grain />
         <Cursor />
         {children}
+        <Footer />
         <CommandPalette />
       </body>
     </html>

@@ -24,6 +24,7 @@ export const site = {
 
 export const navItems = [
   { id: "work", label: "Work" },
+  { id: "lab", label: "Lab" },
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "stack", label: "Stack" },
