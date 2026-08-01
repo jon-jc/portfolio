@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUpRight,
   AtSign,
+  BookOpen,
   Check,
   Command as CommandIcon,
   CornerDownLeft,
@@ -31,7 +33,7 @@ type Command = {
   id: string;
   label: string;
   hint?: string;
-  group: "Navigate" | "Projects" | "Links" | "Actions";
+  group: "Navigate" | "Case studies" | "Projects" | "Links" | "Actions";
   keywords?: string;
   icon: React.ComponentType<{ className?: string }>;
   run: () => void;
@@ -40,6 +42,7 @@ type Command = {
 };
 
 export function CommandPalette() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
@@ -74,9 +77,20 @@ export function CommandPalette() {
     }
   }, [open]);
 
-  const goto = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
+  const goto = useCallback(
+    (id: string) => {
+      const target = document.getElementById(id);
+
+      // The palette is global, but sections only exist on the home page —
+      // from a case study, "Experience" has to route home first.
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        router.push(`/#${id}`);
+      }
+    },
+    [router],
+  );
 
   const openLink = useCallback((url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
@@ -96,15 +110,27 @@ export function CommandPalette() {
       run: () => goto(item.id),
     }));
 
-    const projects: Command[] = featuredProjects.map((project) => ({
-      id: `project-${project.slug}`,
+    const studies: Command[] = featuredProjects.map((project) => ({
+      id: `case-${project.slug}`,
       label: project.name,
-      hint: project.live ? "Open live site" : "Open source",
-      group: "Projects",
-      keywords: `${project.tagline} ${project.stack.join(" ")}`,
-      icon: ArrowUpRight,
-      run: () => openLink(project.live ?? project.repo),
+      hint: "Read the case study",
+      group: "Case studies",
+      keywords: `${project.tagline} ${project.stack.join(" ")} write-up`,
+      icon: BookOpen,
+      run: () => router.push(`/work/${project.slug}`),
     }));
+
+    const projects: Command[] = featuredProjects
+      .filter((project) => project.live)
+      .map((project) => ({
+        id: `project-${project.slug}`,
+        label: project.name,
+        hint: "Open live site",
+        group: "Projects",
+        keywords: `${project.tagline} demo deployed vercel`,
+        icon: ArrowUpRight,
+        run: () => openLink(project.live as string),
+      }));
 
     const links: Command[] = [
       {
@@ -126,11 +152,11 @@ export function CommandPalette() {
       {
         id: "link-resume",
         label: "Résumé",
-        hint: "Open PDF",
+        hint: "Full résumé, printable",
         group: "Links",
-        keywords: "cv download",
+        keywords: "cv download pdf print",
         icon: FileText,
-        run: () => openLink("/Jonathan-Cho-Resume.pdf"),
+        run: () => router.push("/resume"),
       },
     ];
 
@@ -166,8 +192,8 @@ export function CommandPalette() {
       },
     ];
 
-    return [...navigate, ...projects, ...links, ...actions];
-  }, [goto, openLink, toggleTheme, copy]);
+    return [...navigate, ...studies, ...projects, ...links, ...actions];
+  }, [goto, openLink, toggleTheme, copy, router]);
 
   const results = useMemo(() => {
     if (!query.trim()) return commands;

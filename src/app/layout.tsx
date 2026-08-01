@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { CommandPalette } from "@/components/ui/CommandPalette";
 import { Cursor } from "@/components/ui/Cursor";
 import { Grain } from "@/components/ui/Grain";
@@ -118,10 +119,11 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <JsonLd />
       </head>
       <body className="flex min-h-full flex-col bg-canvas text-ink">
         <a
-          href="#work"
+          href="#main"
           className="sr-only rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium focus-visible:not-sr-only focus-visible:fixed focus-visible:left-6 focus-visible:top-6 focus-visible:z-[100]"
         >
           Skip to content

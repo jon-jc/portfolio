@@ -44,7 +44,7 @@ export const featuredProjects: Project[] = [
       "Backed by integration tests that run against real migrations plus contract tests in CI, with a serverless read-only replica on Vercel serving a published snapshot.",
     ],
     metrics: [
-      { value: "10", label: "API endpoints" },
+      { value: "12", label: "API endpoints" },
       { value: "39", label: "counties seeded" },
       { value: "100%", label: "rejects auditable" },
     ],
@@ -143,6 +143,11 @@ export const featuredProjects: Project[] = [
     accent: "accent",
   },
 ];
+
+/** Featured project by slug, or undefined for an unknown one. */
+export function getProject(slug: string): Project | undefined {
+  return featuredProjects.find((project) => project.slug === slug);
+}
 
 export type SideProject = {
   name: string;

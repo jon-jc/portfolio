@@ -310,6 +310,48 @@
 }
 
 /* ==========================================================================
+   Print
+   The résumé route is the one page meant to leave the browser. Force the
+   light palette regardless of theme, drop the decorative layers, and let the
+   browser's own Save as PDF produce the file.
+   ========================================================================== */
+
+@media print {
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    color-scheme: light;
+
+    --canvas: #ffffff;
+    --canvas-deep: #ffffff;
+    --surface: #ffffff;
+    --surface-hi: #ffffff;
+
+    --ink: #14110f;
+    --ink-muted: #3d3835;
+    --ink-faint: #6b6460;
+
+    --line: #d9d4cf;
+    --line-hi: #b8b2ac;
+
+    --accent: #14110f;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  /* Anything pinned to the viewport tiles across every page of the output. */
+  .fixed {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
    Reduced motion
    Kill decorative animation wholesale; components additionally branch on the
    `usePrefersReducedMotion` hook so JS-driven motion opts out too.
