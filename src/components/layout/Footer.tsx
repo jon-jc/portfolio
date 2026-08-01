@@ -13,7 +13,7 @@ const built = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-line">
+    <footer className="border-t border-line print:hidden">
       <div className="mx-auto w-full max-w-6xl px-6 py-12 sm:px-8">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
 
 import { GithubIcon } from "@/components/ui/BrandIcons";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
@@ -146,13 +147,21 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           </ul>
 
           <div className="mt-auto flex flex-wrap items-center gap-2.5 pt-8">
+            <Link
+              href={`/work/${project.slug}`}
+              className="group/case inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-shadow hover:shadow-[0_0_36px_-8px_var(--glow)]"
+            >
+              Case study
+              <ArrowRight className="size-4 transition-transform duration-300 group-hover/case:translate-x-0.5" />
+            </Link>
+
             {project.live ? (
               <a
                 href={project.live}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-label="Visit"
-                className="group/link inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-canvas transition-opacity hover:opacity-90"
+                className="group/link inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
               >
                 Live site
                 <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
