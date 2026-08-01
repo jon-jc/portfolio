@@ -7,55 +7,66 @@
    flipping `data-theme` on <html> restyles the whole site.
    ========================================================================== */
 
+/*
+ * Palette: a warm charcoal canvas rather than the usual blue-black, an amber
+ * primary, and terracotta / slate-blue as the two supporting hues. Amber and
+ * terracotta are analogous, so accents can sit side by side without clashing,
+ * and the single cool hue gives the data-heavy sections something to key off.
+ *
+ * Lightness is the thing being controlled here: every accent lands near L 0.80
+ * on the dark canvas and near L 0.52 on the light one, which is what keeps
+ * contrast comparable between themes instead of hoping an inversion works.
+ */
+
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --canvas: oklch(0.145 0.006 275);
-  --canvas-deep: oklch(0.115 0.006 275);
-  --surface: oklch(0.185 0.008 275);
-  --surface-hi: oklch(0.225 0.01 275);
+  --canvas: oklch(0.148 0.006 70);
+  --canvas-deep: oklch(0.116 0.006 70);
+  --surface: oklch(0.188 0.008 70);
+  --surface-hi: oklch(0.232 0.009 70);
 
-  --ink: oklch(0.97 0.003 275);
-  --ink-muted: oklch(0.74 0.011 275);
-  --ink-faint: oklch(0.56 0.013 275);
+  --ink: oklch(0.968 0.005 85);
+  --ink-muted: oklch(0.762 0.011 80);
+  --ink-faint: oklch(0.586 0.013 78);
 
   --line: oklch(1 0 0 / 9%);
-  --line-hi: oklch(1 0 0 / 16%);
+  --line-hi: oklch(1 0 0 / 17%);
 
-  --accent: oklch(0.84 0.153 172);
-  --accent-ink: oklch(0.18 0.04 172);
-  --accent-soft: oklch(0.84 0.153 172 / 14%);
-  --iris: oklch(0.72 0.155 268);
-  --flare: oklch(0.76 0.17 336);
+  --accent: oklch(0.805 0.132 68);
+  --accent-ink: oklch(0.185 0.04 68);
+  --accent-soft: oklch(0.805 0.132 68 / 13%);
+  --iris: oklch(0.715 0.108 248);
+  --flare: oklch(0.715 0.135 28);
 
-  --glow: oklch(0.84 0.153 172 / 26%);
-  --shadow-color: 275 40% 2%;
+  --glow: oklch(0.805 0.132 68 / 24%);
+  --shadow-color: 70 38% 3%;
 }
 
 [data-theme="light"] {
   color-scheme: light;
 
-  --canvas: oklch(0.985 0.002 275);
-  --canvas-deep: oklch(0.955 0.004 275);
+  --canvas: oklch(0.987 0.004 85);
+  --canvas-deep: oklch(0.958 0.006 85);
   --surface: oklch(1 0 0);
-  --surface-hi: oklch(0.975 0.003 275);
+  --surface-hi: oklch(0.974 0.005 85);
 
-  --ink: oklch(0.19 0.012 275);
-  --ink-muted: oklch(0.44 0.014 275);
-  --ink-faint: oklch(0.6 0.014 275);
+  --ink: oklch(0.205 0.012 70);
+  --ink-muted: oklch(0.448 0.013 72);
+  --ink-faint: oklch(0.606 0.012 74);
 
-  --line: oklch(0.19 0.012 275 / 12%);
-  --line-hi: oklch(0.19 0.012 275 / 22%);
+  --line: oklch(0.205 0.012 70 / 12%);
+  --line-hi: oklch(0.205 0.012 70 / 22%);
 
-  --accent: oklch(0.58 0.128 172);
-  --accent-ink: oklch(0.99 0.01 172);
-  --accent-soft: oklch(0.58 0.128 172 / 12%);
-  --iris: oklch(0.52 0.176 268);
-  --flare: oklch(0.58 0.19 336);
+  --accent: oklch(0.535 0.125 58);
+  --accent-ink: oklch(0.99 0.008 85);
+  --accent-soft: oklch(0.535 0.125 58 / 11%);
+  --iris: oklch(0.492 0.132 252);
+  --flare: oklch(0.535 0.155 28);
 
-  --glow: oklch(0.58 0.128 172 / 18%);
-  --shadow-color: 275 24% 40%;
+  --glow: oklch(0.535 0.125 58 / 18%);
+  --shadow-color: 70 22% 42%;
 }
 
 @theme inline {
@@ -77,9 +88,12 @@
   --color-iris: var(--iris);
   --color-flare: var(--flare);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
-  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  /* Instrument Sans for interface and body — a grotesque with slightly
+     narrow proportions, so long résumé prose stays compact without feeling
+     cramped. Fraunces carries the display voice; JetBrains Mono the data. */
+  --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-src), ui-monospace, "SFMono-Regular", monospace;
+  --font-display: var(--font-display-src), ui-serif, Georgia, serif;
 
   /* A single easing vocabulary keeps motion feeling like one system. */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -233,11 +247,12 @@
     color: transparent;
   }
 
+  /* Amber into terracotta — one short analogous sweep. A full accent-to-iris
+     ramp crosses too much hue to read as a single colour. */
   .gradient-accent {
     background-image: linear-gradient(
       110deg,
       var(--accent) 0%,
-      var(--iris) 55%,
       var(--flare) 100%
     );
     background-clip: text;
@@ -251,6 +266,12 @@
       linear-gradient(to right, var(--line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--line) 1px, transparent 1px);
     background-size: 64px 64px;
+  }
+
+  /* Single-colour black wordmarks would disappear on the dark canvas. One
+     inversion beats shipping a second asset that has to be kept in sync. */
+  [data-theme="dark"] .logo-invert {
+    filter: invert(1);
   }
 
   .mask-fade-y {

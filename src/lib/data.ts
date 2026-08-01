@@ -199,6 +199,17 @@ export const sideProjects: SideProject[] = [
   },
 ];
 
+export type Logo = {
+  src: string;
+  width: number;
+  height: number;
+  /**
+   * True for single-colour black marks, which vanish on the dark canvas and
+   * are inverted by CSS instead of being shipped twice.
+   */
+  invertOnDark?: boolean;
+};
+
 export type Role = {
   company: string;
   title: string;
@@ -206,6 +217,7 @@ export type Role = {
   period: string;
   start: string;
   end: string;
+  logo: Logo;
   bullets: string[];
   tags: string[];
 };
@@ -218,6 +230,7 @@ export const experience: Role[] = [
     period: "2023 — 2025",
     start: "2023",
     end: "2025",
+    logo: { src: "/logos/patchapon.png", width: 363, height: 160 },
     bullets: [
       "Led development of a full-stack e-commerce platform, designing and building the customer-facing storefront in React and Next.js from the ground up.",
       "Built an internal analytics dashboard surfacing sales, revenue, customer trends and order performance, giving stakeholders a single view to drive marketing, inventory and product-launch decisions.",
@@ -232,6 +245,12 @@ export const experience: Role[] = [
     period: "2022 — 2023",
     start: "2022",
     end: "2023",
+    logo: {
+      src: "/logos/nightparade.png",
+      width: 623,
+      height: 160,
+      invertOnDark: true,
+    },
     bullets: [
       "Delivered a production e-commerce platform in React and Next.js with Shopify API integration for product management and secure checkout, contributing to a 55% increase in sales through improved user experience, site performance and a streamlined purchasing flow.",
       "Designed and built an internal sales analytics dashboard surfacing accurate real-time sales, order and revenue metrics, giving stakeholders actionable insight into business performance.",
