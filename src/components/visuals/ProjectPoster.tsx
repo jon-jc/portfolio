@@ -494,8 +494,112 @@ function LayerPoster() {
   );
 }
 
+/**
+ * NeuralRig — the signal chain, drawn as one: a waveform gaining amplitude as
+ * it crosses the stages, the eight stages themselves with the NAM capture lit,
+ * and the tone stack's response curve underneath.
+ */
+function RigPoster() {
+  const random = seeded(6421);
+
+  // Amplitude envelope rising left to right — gain staging, visually.
+  const wave = Array.from({ length: 58 }, (_, index) => {
+    const envelope = 0.28 + (index / 57) * 0.72;
+    return round(5 + envelope * (8 + random() * 24));
+  });
+
+  const stages = Array.from({ length: 8 }, (_, index) => ({
+    x: round(20 + index * 46),
+    // The capture is the stage everything else is arranged around.
+    lit: index === 2,
+  }));
+
+  return (
+    <>
+      <Graticule step={40} />
+
+      {/* Signal, centred on its own baseline. */}
+      <g>
+        {wave.map((height, index) => (
+          <rect
+            key={index}
+            x={round(22 + index * 6.3)}
+            y={round(86 - height / 2)}
+            width="2.5"
+            height={height}
+            rx="1.25"
+            fill="var(--tone)"
+            fillOpacity={round(0.22 + (index / 57) * 0.5)}
+          />
+        ))}
+      </g>
+
+      {/* Gate threshold: the line the trigger is decided against. */}
+      <line
+        x1="16"
+        y1="108"
+        x2="384"
+        y2="108"
+        stroke="var(--tone)"
+        strokeOpacity="0.28"
+        strokeWidth="0.75"
+        strokeDasharray="3 5"
+      />
+
+      {/* The chain. */}
+      <line
+        x1="12"
+        y1="142"
+        x2="388"
+        y2="142"
+        stroke="var(--tone)"
+        strokeOpacity="0.3"
+        strokeWidth="1"
+      />
+      <g>
+        {stages.map((stage, index) => (
+          <rect
+            key={index}
+            x={stage.x}
+            y="130"
+            width="34"
+            height="24"
+            rx="5"
+            fill="var(--tone)"
+            fillOpacity={stage.lit ? 0.55 : 0.14}
+            stroke="var(--tone)"
+            strokeOpacity={stage.lit ? 0.8 : 0.3}
+            strokeWidth="0.75"
+            className={
+              stage.lit
+                ? "transition-opacity duration-700 group-hover:opacity-100"
+                : undefined
+            }
+          />
+        ))}
+      </g>
+
+      {/* Tone stack response. */}
+      <path
+        d="M 16 196 C 70 196, 96 178, 140 180 S 214 202, 262 186 S 336 166, 386 176"
+        fill="none"
+        stroke="var(--tone)"
+        strokeOpacity="0.5"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 16 196 C 70 196, 96 178, 140 180 S 214 202, 262 186 S 336 166, 386 176 L 386 214 L 16 214 Z"
+        fill="var(--tone)"
+        fillOpacity="0.07"
+      />
+    </>
+  );
+}
+
 const posters: Record<string, () => React.ReactElement> = {
   kasane: LayerPoster,
+  "neural-rig": RigPoster,
   spillsense: SpillPoster,
   "tokyo-train-map": TransitPoster,
   apartmentfeesjapan: WardPoster,

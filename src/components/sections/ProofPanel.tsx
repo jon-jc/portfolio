@@ -127,7 +127,7 @@ export function ProofPanel() {
       </dl>
 
       <div className="border-t border-line px-5 py-4">
-        <p className="label">The five</p>
+        <p className="label">The systems</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {featuredProjects.map((project) => (
             <li key={project.slug}>

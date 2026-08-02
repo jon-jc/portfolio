@@ -1,4 +1,4 @@
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Users } from "lucide-react";
 
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
@@ -109,9 +109,25 @@ export function About() {
               </ul>
             </div>
 
-            <p className="mt-7 border-t border-line pt-6 text-sm text-ink-muted">
-              {education.extra}
-            </p>
+            <div className="mt-7 border-t border-line pt-6">
+              <p className="label">Activity</p>
+              <div className="mt-4 flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="grid size-9 shrink-0 place-items-center rounded-full border border-line bg-surface text-accent"
+                >
+                  <Users className="size-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-ink">
+                    {education.activity.role}
+                  </p>
+                  <p className="mt-0.5 truncate text-sm text-ink-muted">
+                    {education.activity.org}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

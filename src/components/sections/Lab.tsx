@@ -17,7 +17,7 @@ export function Lab() {
           <span className="text-ink-faint">something specific.</span>
         </>
       }
-      lede="Audio plugins, storefronts, a game engine detour. Not everything needs to be a platform — some of these exist because the problem was interesting."
+      lede="Storefronts, tools, a language-exchange app. Not everything needs to be a platform — some of these exist because the problem was interesting."
     >
       <RevealGroup className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
         {sideProjects.map((project) => (
