@@ -151,8 +151,8 @@ export function CommandPalette() {
       },
       {
         id: "link-resume",
-        label: "Résumé",
-        hint: "Full résumé, printable",
+        label: "Resume",
+        hint: "Full resume, printable",
         group: "Links",
         keywords: "cv download pdf print",
         icon: FileText,

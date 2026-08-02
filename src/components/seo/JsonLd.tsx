@@ -52,8 +52,10 @@ export function JsonLd() {
       "@id": `${site.url}/work/${project.slug}#project`,
       name: project.name,
       description: project.summary,
-      url: project.live ?? project.repo,
-      codeRepository: project.repo,
+      url: project.live ?? project.repo ?? `${site.url}/work/${project.slug}`,
+      // Omitted rather than null where the repository is private — an empty
+      // property is a validation warning for no benefit.
+      ...(project.repo ? { codeRepository: project.repo } : {}),
       programmingLanguage: project.stack,
       author: { "@id": personId },
     })),

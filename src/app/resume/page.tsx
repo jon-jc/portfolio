@@ -15,13 +15,13 @@ import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Résumé",
-  description: `Résumé of ${site.name} — ${site.role.toLowerCase()} working across React, TypeScript, .NET and relational data systems.`,
+  title: "Resume",
+  description: `Resume of ${site.name} — ${site.role.toLowerCase()} working across React, TypeScript, .NET and relational data systems.`,
   alternates: { canonical: "/resume" },
 };
 
 /**
- * The résumé as a page rather than a file.
+ * The resume as a page rather than a file.
  *
  * A linked PDF goes stale the moment anything else on the site changes; this
  * renders from the same content the rest of the site reads, and the print
@@ -175,9 +175,7 @@ export default function ResumePage() {
                       </span>
                     </h3>
                     <span className="font-mono text-xs text-ink-faint">
-                      {project.live
-                        ? project.live.replace("https://", "")
-                        : project.repo.replace("https://", "")}
+                      {(project.live ?? project.repo)?.replace("https://", "")}
                     </span>
                   </div>
 

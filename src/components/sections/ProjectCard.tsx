@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown, Lock } from "lucide-react";
 
 import { GithubIcon } from "@/components/ui/BrandIcons";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
@@ -163,21 +163,32 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                 data-cursor-label="Visit"
                 className="group/link inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
               >
-                Live site
+                {project.liveLabel ?? "Live site"}
                 <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
               </a>
             ) : null}
 
-            <a
-              href={project.repo}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor-label="Code"
-              className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
-            >
-              <GithubIcon className="size-4" />
-              Source
-            </a>
+            {project.repo ? (
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor-label="Code"
+                className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
+              >
+                <GithubIcon className="size-4" />
+                Source
+              </a>
+            ) : null}
+
+            {/* Said plainly rather than left as a missing button, so nobody
+                goes looking for a repository that isn't public. */}
+            {project.access ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-line px-5 py-2.5 text-sm text-ink-faint">
+                <Lock className="size-3.5" />
+                {project.access}
+              </span>
+            ) : null}
           </div>
         </div>
       </article>

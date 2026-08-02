@@ -39,6 +39,80 @@ export type CaseStudy = {
 };
 
 export const caseStudies: Record<string, CaseStudy> = {
+  kasane: {
+    problem:
+      "Watching Japanese video to learn from it means choosing between subtitles you cannot interrogate and a dictionary you have to leave the video to use — and every hosted translator wants the footage on someone else's server.",
+    context: [
+      "Kasane is a self-hosted Japanese-to-English video translator. It takes local files or authorized YouTube links, publishes English subtitles while the video is still processing, and keeps every synchronized Japanese word clickable for readings, definitions, confidence and contextual examples.",
+      "The entire translation path runs in containers the viewer controls. There is no hosted model API, no key to buy and no metered language service — which is the constraint the rest of the design follows from.",
+    ],
+    chapters: [
+      {
+        title: "Stay ahead of the viewer, then never stop",
+        body: "The worker prepares the first twelve seconds before playback unlocks, then keeps working ahead of the playhead using bounded overlapping audio windows. Each window is transcribed, translated, enriched and pushed to the browser over a Server-Sent Events stream. After that one-time buffer, playback is never paused to let processing catch up — the buffer is the entire cost, paid once and visibly, with live seconds and progress rather than an indeterminate spinner.",
+      },
+      {
+        title: "Words, not just subtitles",
+        body: "Japanese does not put spaces between words, so a subtitle line is not something you can click. Fugashi with UniDic does morphological tokenization to recover word boundaries, and each token carries its word-level timestamp and recognition confidence through to the player. A locally indexed JMdict database supplies readings, Hepburn romanization, parts of speech and definitions; Tatoeba supplies contextual example sentences. The lexicon is pinned and built into the analyzer image, so lookups are a read-only SQLite query rather than a network call.",
+      },
+      {
+        title: "Never do the same inference twice",
+        body: "Public YouTube analyses are fingerprinted by video ID and inference profile. A completed result is reused for twenty-four hours, and concurrent requests for the same video are collapsed onto a single in-flight task rather than each starting their own. Tracking parameters on a URL do not create duplicate work. Uploaded files are deliberately excluded from that shared cache — private media should not become a cache entry someone else can hit.",
+      },
+      {
+        title: "A dropped connection is not a lost job",
+        body: "Redis holds the queue and durable job snapshots, so the SSE stream is an optimization rather than the source of truth. If a live connection breaks, the client falls back to adaptive polling against the snapshot and picks up where it was, instead of restarting inference that has already been paid for.",
+      },
+      {
+        title: "One build, local or deployed",
+        body: "Browser traffic never targets a machine-local analyzer address. Next.js proxies /api/analyzer/* to the internal analyzer service, so the same build works on a laptop and behind a production domain without a public analyzer URL or a second configuration path to keep in sync.",
+      },
+    ],
+    architecture: [
+      { layer: "Next.js studio", detail: "Player, live timeline, word inspector, SSE client." },
+      { layer: "/api/analyzer gateway", detail: "Same-origin proxy to the internal service." },
+      { layer: "FastAPI job service", detail: "Job submission, limits, cancellation, snapshots." },
+      { layer: "Redis", detail: "Queue plus durable job state for recovery." },
+      { layer: "Celery worker", detail: "yt-dlp and FFmpeg ingestion, inference, enrichment." },
+      { layer: "faster-whisper", detail: "Japanese recognition and English translation." },
+      { layer: "JMdict / UniDic", detail: "Read-only lexicon and morphological tokenizer." },
+    ],
+    decisions: [
+      {
+        choice: "Self-hosted inference instead of a translation API",
+        because:
+          "The premise is that the media stays private. A hosted API would mean uploading the footage, a key to manage and a per-minute cost that scales with exactly the usage the tool is designed to encourage.",
+      },
+      {
+        choice: "A twelve-second buffer before playback unlocks",
+        because:
+          "Short enough to feel like a load, long enough that the worker can stay ahead for the rest of the video. Tuning the chunk duration trades initial wait against recognition context and CPU efficiency, and twelve seconds is where that balance landed.",
+      },
+      {
+        choice: "SSE with a polling fallback, not WebSockets",
+        because:
+          "The stream is one-directional and the job state is already durable in Redis. SSE survives proxies that WebSocket upgrades do not, and the fallback path is a plain GET against the same snapshot.",
+      },
+      {
+        choice: "Fingerprint by video ID and inference profile",
+        because:
+          "Two viewers asking for the same video at the same quality profile should cost one inference run. Including the profile in the key stops a CPU-profile result being served to someone who asked for the GPU one.",
+      },
+      {
+        choice: "Proxy the analyzer through Next.js",
+        because:
+          "It keeps the analyzer off the public internet and makes the browser's URL identical in development and production, so there is no environment-specific client configuration to get wrong.",
+      },
+    ],
+    verification:
+      "Ingestion is bounded before it reaches the worker: streamed uploads with duration and size limits, rate limiting, cancellation, and errors that stay safe to show a user. YouTube handling is scoped to material the operator is authorized to process, and playback stays in the official embedded player — the worker uses the link only for audio analysis.",
+    facts: [
+      { label: "First playback", value: "12 s" },
+      { label: "Result reuse", value: "24 h" },
+      { label: "Hosted APIs", value: "0" },
+      { label: "Services", value: "5" },
+    ],
+  },
   spillsense: {
     problem:
       "Spill response programs live or die on data quality: a responder needs to know what spilled, where, how much, and who is responsible — fast.",
