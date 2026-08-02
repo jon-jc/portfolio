@@ -414,7 +414,9 @@ export function CommandHint() {
       type="button"
       onClick={openCommandPalette}
       aria-label="Open command palette"
-      className="hidden items-center gap-2 rounded-full border border-line bg-surface/60 py-1.5 pl-3 pr-2 text-xs text-ink-faint transition-colors hover:border-line-hi hover:text-ink-muted md:flex"
+      // Yields the row to the resume link below lg: the shortcut still works
+      // everywhere, this is only its affordance.
+      className="hidden items-center gap-2 rounded-full border border-line bg-surface/60 py-1.5 pl-3 pr-2 text-xs text-ink-faint transition-colors hover:border-line-hi hover:text-ink-muted lg:flex"
     >
       <Search className="size-3.5" />
       <span>Search</span>

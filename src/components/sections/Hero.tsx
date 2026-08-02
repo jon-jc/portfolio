@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import { ArrowDown, FileText } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
+import { ProofPanel } from "@/components/sections/ProofPanel";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Reveal } from "@/components/ui/Reveal";
 import { RotatingText } from "@/components/ui/RotatingText";
 import { TextScramble } from "@/components/ui/TextScramble";
-import { stats } from "@/lib/data";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 import { site } from "@/lib/site";
 
@@ -196,21 +196,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.22}>
-            <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-line bg-line">
-              {stats.map((stat) => (
-                <div key={stat.label} className="bg-canvas/70 p-5 backdrop-blur-sm">
-                  <dt className="sr-only">{stat.label}</dt>
-                  <dd>
-                    <span className="block font-mono text-2xl font-medium tracking-tight text-ink sm:text-3xl">
-                      {stat.value}
-                    </span>
-                    <span className="mt-2 block text-xs leading-snug text-ink-faint">
-                      {stat.label}
-                    </span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <ProofPanel />
           </Reveal>
         </div>
       </div>

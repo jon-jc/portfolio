@@ -365,9 +365,42 @@ export const skillGroups: SkillGroup[] = [
   },
 ];
 
-/** Headline numbers for the hero strip. */
-export const stats: Metric[] = [
-  { value: "3+", label: "Years shipping production React" },
-  { value: "55%", label: "Sales lift from purchase-flow rework" },
-  { value: "5", label: "Systems built end to end, schema to UI" },
+export type HeadlineStat = Metric & {
+  /** Which micro-visual sits beside the number. */
+  visual: "ring" | "bars" | "blocks";
+  /** How full that visual reads, 0–1. */
+  fill: number;
+  /** The line that stops the number being a number with no provenance. */
+  detail: string;
+};
+
+/**
+ * The hero's proof panel.
+ *
+ * A bare figure invites the question "says who?", so each one carries where it
+ * came from. These are the three claims worth leading with: how long, what
+ * changed because of the work, and how much of the stack it covered.
+ */
+export const stats: HeadlineStat[] = [
+  {
+    value: "3+",
+    label: "Years shipping production React",
+    detail: "Two companies, storefronts and the internal dashboards behind them",
+    visual: "ring",
+    fill: 0.78,
+  },
+  {
+    value: "55%",
+    label: "Sales lift at NightParade",
+    detail: "After purchase-flow rework, performance and UX work",
+    visual: "bars",
+    fill: 0.55,
+  },
+  {
+    value: "5",
+    label: "Systems built end to end",
+    detail: "Schema, ETL, API and interface — four deployed, one self-hosted",
+    visual: "blocks",
+    fill: 1,
+  },
 ];

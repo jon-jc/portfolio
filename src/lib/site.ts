@@ -28,8 +28,8 @@ export const site = {
  * have to stay in step.
  */
 export const navItems = [
-  { id: "work", label: "Work" },
   { id: "experience", label: "Experience" },
+  { id: "work", label: "Work" },
   { id: "about", label: "About" },
   { id: "lab", label: "Lab" },
   { id: "stack", label: "Stack" },

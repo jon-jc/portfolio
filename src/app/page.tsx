@@ -13,8 +13,8 @@ export default function Home() {
       <Nav />
       <main id="main" className="flex-1">
         <Hero />
-        <Work />
         <Experience />
+        <Work />
         <About />
         <Lab />
         <Stack />
