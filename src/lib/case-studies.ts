@@ -113,6 +113,73 @@ export const caseStudies: Record<string, CaseStudy> = {
       { label: "Services", value: "5" },
     ],
   },
+  "neural-rig": {
+    problem:
+      "The stock Neural Amp Modeler plugin loads one capture at a time, and finding a new one means leaving the DAW to go browsing — so the two things a player actually does, chaining tones and hunting for them, both sit outside the tool.",
+    context: [
+      "NeuralRig is a guitar amp plugin built on Neural Amp Modeler. Where the stock plugin is a single capture, NeuralRig is a rig: a chain of NAM captures, plus a TONE3000 browser built into the plugin itself, so profiles can be searched, filtered, downloaded and auditioned without switching windows.",
+      "It ships as VST3, AU, AAX and Standalone, and is derived directly from NeuralAmpModelerPlugin — which sets the constraint the whole project is judged against.",
+    ],
+    chapters: [
+      {
+        title: "Tone parity is the acceptance test",
+        body: "A single loaded capture has to sound exactly as it does in the original plugin, or the extra features are worthless. The signal path is kept intact end to end: calibrated input trim, noise gate trigger, the NAM capture resampled to its trained rate, gate gain, tone stack, impulse response, DC-blocking high-pass, output trim. Anything added sits around that chain rather than inside it.",
+      },
+      {
+        title: "A noise gate split across the model",
+        body: "The gate triggers on the input, so the decision to open is made on the player's clean signal — but it applies its gain after the model, so the capture's own noise floor is attenuated too. Both simpler arrangements are worse in specific ways: gating entirely before the model leaves that noise floor untouched, and gating entirely after it makes the gate stutter on the model's output rather than on what was played.",
+      },
+      {
+        title: "The high-pass that isn't cosmetic",
+        body: "Neural models can emit a small DC offset. The DC-blocking high-pass after the impulse response looks like tidy-up and is actually load-bearing: without it, that offset accumulates through everything downstream. It is the kind of stage that is easy to drop during a refactor because removing it changes nothing audible immediately.",
+      },
+      {
+        title: "One precision, all the way through",
+        body: "Everything runs in double, matching iPlug2's sample type and the defaults of both NAM_SAMPLE and DSP_SAMPLE. Mixed precision across a chain this long is a silent problem — no stage errors, the result is just quietly worse than it should be.",
+      },
+      {
+        title: "A layout dictated by the build",
+        body: "The repository mirrors upstream's structure because iPlug2's project files reference dependencies by relative path and will not resolve otherwise. iPlug2, NeuralAmpModelerCore, AudioDSPTools and Eigen come in as submodules; the plugin itself is the only original tree. Linux is unsupported, which is the trade iPlug2 makes for a permissive licence and upstream parity.",
+      },
+    ],
+    architecture: [
+      { layer: "iPlug2", detail: "Plugin framework and formats (submodule)." },
+      { layer: "NeuralAmpModelerCore", detail: "NAM inference engine (submodule)." },
+      { layer: "AudioDSPTools", detail: "Gate, IR, filters, resampler (submodule)." },
+      { layer: "Eigen", detail: "Linear algebra behind the model (submodule)." },
+      { layer: "NeuralRig", detail: "Processor, editor, rig chain, TONE3000 browser." },
+    ],
+    decisions: [
+      {
+        choice: "Derive from NeuralAmpModelerPlugin rather than rebuild",
+        because:
+          "Parity with the reference implementation is the product requirement. Reimplementing the chain would mean re-earning a tone people already trust, and every difference would read as a bug.",
+      },
+      {
+        choice: "Trigger the gate before the model, apply it after",
+        because:
+          "It is the only arrangement where the open/close decision is made on the player's signal and the capture's noise floor still gets attenuated. Both single-sided placements fail one of those.",
+      },
+      {
+        choice: "Ship the profile browser inside the plugin",
+        because:
+          "Auditioning a tone means hearing it in the current mix. A browser in a separate app turns that into download, install, reload, listen — which is enough friction that people stop exploring.",
+      },
+      {
+        choice: "Accept no Linux support",
+        because:
+          "iPlug2 does not target it. Swapping frameworks to gain Linux would cost the permissive licence and the upstream parity the project is built on.",
+      },
+    ],
+    verification:
+      "The reference build is the test: a single capture through NeuralRig has to match the same capture through NeuralAmpModelerPlugin. Distribution is scripted per platform, so what gets shipped is what was built rather than an IDE's local state.",
+    facts: [
+      { label: "Formats", value: "VST3 / AU / AAX / Standalone" },
+      { label: "Chain stages", value: "8" },
+      { label: "Sample type", value: "double" },
+      { label: "Submodules", value: "4" },
+    ],
+  },
   spillsense: {
     problem:
       "Spill response programs live or die on data quality: a responder needs to know what spilled, where, how much, and who is responsible — fast.",

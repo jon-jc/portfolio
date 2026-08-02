@@ -11,11 +11,11 @@ export function Work() {
       eyebrow="Selected work"
       title={
         <>
-          Five systems, built end to end —{" "}
+          Six systems, built end to end —{" "}
           <span className="text-ink-faint">schema through interface.</span>
         </>
       }
-      lede="Each of these started at the data model and finished at something a person can actually use. Four are deployed and open source; the fifth runs entirely on your own hardware by design."
+      lede="Each of these started at the data model and finished at something a person can actually use — four deployed on the web, one self-hosted by design, and one that ships as a plugin."
     >
       <div className="flex flex-col gap-5 sm:gap-6">
         {featuredProjects.map((project, index) => (

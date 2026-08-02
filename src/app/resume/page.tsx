@@ -197,7 +197,8 @@ export default function ResumePage() {
             <p className="mt-1 text-sm text-ink-muted">{education.school}</p>
             <p className="mt-3 text-sm leading-relaxed text-ink-muted">
               GPA {education.gpa} · Coursework:{" "}
-              {education.coursework.join(", ")} · {education.extra}
+              {education.coursework.join(", ")} · {education.activity.role},{" "}
+              {education.activity.org}
             </p>
           </ResumeSection>
         </div>

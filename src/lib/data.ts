@@ -72,6 +72,38 @@ export const featuredProjects: Project[] = [
     accent: "flare",
   },
   {
+    slug: "neural-rig",
+    name: "NeuralRig",
+    tagline: "Guitar amp plugin & profile browser",
+    year: "2026",
+    summary:
+      "A guitar amp plugin that chains Neural Amp Modeler captures instead of loading one at a time, with a TONE3000 profile browser built into the plugin so you never leave the DAW.",
+    highlights: [
+      "Derived from NeuralAmpModelerPlugin with the signal path kept intact — calibrated input trim, gate trigger, NAM capture resampled to its trained rate, gate gain, tone stack, impulse response, DC-blocking high-pass, output trim — so a single loaded capture sounds exactly as it does upstream.",
+      "Split the noise gate across the model: it triggers on the input, so the decision to open is made on the player's clean signal, but applies its gain after the capture so the model's own noise floor is attenuated too. Gating entirely before leaves that floor untouched; gating entirely after makes the gate stutter on the model's output.",
+      "Kept the DC-blocking high-pass after the IR, which is not cosmetic — neural models can emit a small DC offset, and without the blocker it accumulates through everything downstream.",
+      "Runs in double throughout, matching iPlug2's sample type and the defaults of both NAM_SAMPLE and DSP_SAMPLE, so no stage silently narrows precision.",
+    ],
+    metrics: [
+      { value: "4", label: "plugin formats" },
+      { value: "8", label: "stages in the chain" },
+      { value: "64-bit", label: "audio path throughout" },
+    ],
+    stack: [
+      "C++",
+      "iPlug2",
+      "NAM",
+      "AudioDSPTools",
+      "Eigen",
+      "VST3",
+      "AU",
+      "AAX",
+    ],
+    repo: "https://github.com/jon-jc/neural-rig",
+    access: "Desktop plugin — build from source",
+    accent: "iris",
+  },
+  {
     slug: "spillsense",
     name: "SpillSense",
     tagline: "Environmental incident platform",
@@ -199,13 +231,6 @@ export type SideProject = {
 
 export const sideProjects: SideProject[] = [
   {
-    name: "Neural Rig",
-    blurb:
-      "Chainable Neural Amp Modeler rig with a built-in TONE3000 profile browser, shipping as VST3, AU and standalone.",
-    stack: "C++ · JUCE · DSP",
-    repo: "https://github.com/jon-jc/neural-rig",
-  },
-  {
     name: "Avant Garde",
     blurb:
       "Fashion e-commerce storefront built on the Next.js App Router with a component system on shadcn/ui.",
@@ -291,7 +316,7 @@ export const experience: Role[] = [
 ];
 
 export const education = {
-  degree: "B.A., Computer Science & Systems",
+  degree: "BA, Computer Science & Systems",
   school: "University of Washington",
   period: "Aug 2020 — Aug 2023",
   gpa: "3.67",
@@ -301,7 +326,11 @@ export const education = {
     "Algorithms",
     "Operating Systems",
   ],
-  extra: "Officer, HuSCII Coding Club",
+  /** Split so the card can set the role and the organisation differently. */
+  activity: {
+    role: "Officer",
+    org: "HuSCII Coding Club",
+  },
 };
 
 export type SkillGroup = {
@@ -397,9 +426,10 @@ export const stats: HeadlineStat[] = [
     fill: 0.55,
   },
   {
-    value: "5",
+    value: "6",
     label: "Systems built end to end",
-    detail: "Schema, ETL, API and interface — four deployed, one self-hosted",
+    detail:
+      "Schema, ETL, API, DSP and interface — four deployed, one self-hosted, one native",
     visual: "blocks",
     fill: 1,
   },
