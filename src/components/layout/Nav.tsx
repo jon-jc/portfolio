@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { FileText, Menu, X } from "lucide-react";
 
 import { CommandHint } from "@/components/ui/CommandPalette";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -111,6 +112,17 @@ export function Nav() {
 
           <div className="flex items-center gap-2 sm:gap-3">
             <CommandHint />
+
+            {/* Persistent, because it is the single thing a recruiter is most
+                likely to be looking for and it shouldn't need a scroll. */}
+            <Link
+              href="/resume"
+              className="hidden items-center gap-1.5 rounded-full border border-line bg-surface/60 px-3.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:border-accent/40 hover:text-ink md:inline-flex"
+            >
+              <FileText className="size-3.5" />
+              Resume
+            </Link>
+
             <ThemeToggle />
             <button
               type="button"
@@ -173,6 +185,22 @@ export function Nav() {
                   </motion.li>
                 ))}
               </ul>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 + navItems.length * 0.045, duration: 0.4 }}
+                className="mt-8"
+              >
+                <Link
+                  href="/resume"
+                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-ink"
+                >
+                  <FileText className="size-4" />
+                  Resume
+                </Link>
+              </motion.div>
             </nav>
           </motion.div>
         ) : null}

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, ArrowUpRight, ChevronDown, Lock } from "lucide-react";
 
 import { GithubIcon } from "@/components/ui/BrandIcons";
+import { CountUp } from "@/components/ui/CountUp";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { ProjectPoster } from "@/components/visuals/ProjectPoster";
 import type { Project } from "@/lib/data";
@@ -36,11 +37,14 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
   const flipped = index % 2 === 1;
 
   return (
-    <SpotlightCard tone={project.accent} className="rounded-3xl">
+    <SpotlightCard tone={project.accent} className="rounded-2xl">
       <article className="grid lg:grid-cols-2">
         <div
           className={cn(
-            "relative min-h-[15rem] overflow-hidden border-line max-lg:border-b lg:min-h-[26rem]",
+            // A ratio rather than a height while stacked: a fixed height on a
+            // full-width panel makes the slice crop scale with the viewport,
+            // and at tablet widths it eats most of the poster.
+            "relative aspect-[5/2] overflow-hidden border-line max-lg:border-b lg:aspect-auto lg:min-h-[18rem]",
             flipped ? "lg:order-2 lg:border-l" : "lg:border-r",
           )}
         >
@@ -51,7 +55,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             className="absolute inset-0 opacity-90 transition-transform duration-[1.2s] ease-out-expo group-hover:scale-[1.04]"
           />
 
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between p-6">
+          <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
             <span className="font-mono text-xs tabular-nums text-ink-faint">
               {String(index + 1).padStart(2, "0")}
             </span>
@@ -61,28 +65,29 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           </div>
 
           {/* Softens the poster into the card rather than cutting it off. */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-surface/70 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface/70 to-transparent" />
         </div>
 
-        <div className="flex flex-col p-7 sm:p-9">
+        <div className="flex flex-col p-5 sm:p-7">
           <p className="label">{project.tagline}</p>
 
-          <h3 className="mt-4 text-2xl font-medium tracking-tight sm:text-3xl">
+          <h3 className="mt-3 text-xl font-medium tracking-tight sm:text-2xl">
             {project.name}
           </h3>
 
-          <p className="mt-4 text-pretty leading-relaxed text-ink-muted">
+          <p className="mt-3 text-pretty text-sm leading-relaxed text-ink-muted">
             {project.summary}
           </p>
 
-          <dl className="mt-7 grid grid-cols-3 gap-4 border-y border-line py-5">
+          <dl className="mt-5 grid grid-cols-3 gap-4 border-y border-line py-4">
             {project.metrics.map((metric) => (
               <div key={metric.label}>
                 <dt className="sr-only">{metric.label}</dt>
                 <dd>
-                  <span className="block font-mono text-xl font-medium tracking-tight text-ink">
-                    {metric.value}
-                  </span>
+                  <CountUp
+                    value={metric.value}
+                    className="block font-mono text-lg font-medium tracking-tight text-ink"
+                  />
                   <span className="mt-1.5 block text-[11px] leading-tight text-ink-faint">
                     {metric.label}
                   </span>
@@ -97,7 +102,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
               aria-controls={notesId}
-              className="mt-6 inline-flex items-center gap-1.5 text-sm text-ink-muted transition-colors hover:text-ink"
+              className="mt-5 inline-flex items-center gap-1.5 text-sm text-ink-muted transition-colors hover:text-ink"
             >
               Engineering notes
               <ChevronDown
@@ -119,7 +124,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                   transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <ul className="mt-4 space-y-3.5 text-sm leading-relaxed text-ink-muted">
+                  <ul className="mt-4 space-y-3 text-sm leading-relaxed text-ink-muted">
                     {project.highlights.map((highlight) => (
                       <li key={highlight} className="flex gap-3">
                         <span
@@ -135,7 +140,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             </AnimatePresence>
           </div>
 
-          <ul className="mt-7 flex flex-wrap gap-1.5">
+          <ul className="mt-5 flex flex-wrap gap-1.5">
             {project.stack.map((tech) => (
               <li
                 key={tech}
@@ -146,10 +151,10 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             ))}
           </ul>
 
-          <div className="mt-auto flex flex-wrap items-center gap-2.5 pt-8">
+          <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
             <Link
               href={`/work/${project.slug}`}
-              className="group/case inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-shadow hover:shadow-[0_0_36px_-8px_var(--glow)]"
+              className="group/case inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-ink transition-shadow hover:shadow-[0_0_36px_-8px_var(--glow)]"
             >
               Case study
               <ArrowRight className="size-4 transition-transform duration-300 group-hover/case:translate-x-0.5" />
@@ -161,7 +166,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-label="Visit"
-                className="group/link inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
+                className="group/link inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
               >
                 {project.liveLabel ?? "Live site"}
                 <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
@@ -174,7 +179,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-label="Code"
-                className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
+                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
               >
                 <GithubIcon className="size-4" />
                 Source

@@ -7,7 +7,7 @@ export function Work() {
   return (
     <Section
       id="work"
-      index="01"
+      index="02"
       eyebrow="Selected work"
       title={
         <>
@@ -17,7 +17,7 @@ export function Work() {
       }
       lede="Each of these started at the data model and finished at something a person can actually use. Four are deployed and open source; the fifth runs entirely on your own hardware by design."
     >
-      <div className="flex flex-col gap-8 sm:gap-10">
+      <div className="flex flex-col gap-5 sm:gap-6">
         {featuredProjects.map((project, index) => (
           <Reveal key={project.slug} distance={28}>
             <ProjectCard project={project} index={index} />
