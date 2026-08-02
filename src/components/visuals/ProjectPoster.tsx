@@ -372,7 +372,130 @@ function ChromaPoster() {
   );
 }
 
+/**
+ * Kasane — 重ね, "layering". Audio at the top, the aligned layers the pipeline
+ * stacks on top of it in the middle, and the tokenised words those layers
+ * resolve to at the bottom.
+ */
+function LayerPoster() {
+  const random = seeded(5387);
+
+  // The card crops this hard when it stacks — a 400×260 box sliced into a wide
+  // short slot keeps roughly y 60–205. Everything that carries the idea is
+  // composed inside that band; only the graticule is allowed to bleed past it.
+  const bars = Array.from({ length: 46 }, (_, index) => {
+    // An envelope, so it reads as speech rather than a noise floor.
+    const envelope = Math.abs(Math.sin(index * 0.36)) * 0.7 + 0.3;
+    return round(4 + envelope * random() * 26);
+  });
+
+  // Word tokens: variable widths, the way real morphemes segment.
+  const tokens: { x: number; width: number; lit: boolean }[] = [];
+  let cursor = 26;
+  while (cursor < 356) {
+    const width = round(13 + random() * 26);
+    tokens.push({ x: round(cursor), width, lit: random() > 0.72 });
+    cursor += width + 6;
+  }
+
+  const layers = [
+    { y: 106, inset: 0, opacity: 0.07 },
+    { y: 124, inset: 14, opacity: 0.12 },
+    { y: 142, inset: 28, opacity: 0.18 },
+    { y: 160, inset: 42, opacity: 0.26 },
+  ];
+
+  return (
+    <>
+      <Graticule step={40} />
+
+      {/* Source audio. */}
+      <g>
+        {bars.map((height, index) => (
+          <rect
+            key={index}
+            x={round(26 + index * 7.8)}
+            y={round(78 - height / 2)}
+            width="3"
+            height={height}
+            rx="1.5"
+            fill="var(--tone)"
+            fillOpacity={round(0.26 + (index % 5) * 0.1)}
+          />
+        ))}
+      </g>
+
+      {/* Alignment ticks tying the stack back to the waveform. Behind the
+          layers, so they read as guides rather than decoration on top. */}
+      <g
+        stroke="var(--tone)"
+        strokeOpacity="0.24"
+        strokeWidth="0.75"
+        strokeDasharray="2 4"
+      >
+        {[96, 180, 264].map((x) => (
+          <line key={x} x1={x} y1="92" x2={x} y2="196" />
+        ))}
+      </g>
+
+      {/* 重ね — the layers the pipeline stacks over that audio: recognition,
+          translation, readings, examples. Each is offset and a step more
+          opaque, so the stack reads as depth rather than four equal bars. */}
+      <g>
+        {layers.map((layer, index) => (
+          <g key={index}>
+            <rect
+              x={round(30 + layer.inset)}
+              y={layer.y}
+              width={round(300 - layer.inset * 0.4)}
+              height="24"
+              rx="5"
+              fill="var(--tone)"
+              fillOpacity={layer.opacity}
+              stroke="var(--tone)"
+              strokeOpacity={round(0.2 + index * 0.12)}
+              strokeWidth="0.75"
+            />
+            {/* Content sitting on each layer, dimmer the further back it is. */}
+            <rect
+              x={round(42 + layer.inset)}
+              y={round(layer.y + 9)}
+              width={round(150 - index * 22)}
+              height="6"
+              rx="3"
+              fill="var(--tone)"
+              fillOpacity={round(0.3 + index * 0.14)}
+            />
+          </g>
+        ))}
+      </g>
+
+      {/* The tokens those layers resolve to. */}
+      <g>
+        {tokens.map((token, index) => (
+          <rect
+            key={index}
+            x={token.x}
+            y="192"
+            width={token.width}
+            height="10"
+            rx="3"
+            fill="var(--tone)"
+            fillOpacity={token.lit ? 0.7 : 0.22}
+            className={
+              token.lit
+                ? "transition-opacity duration-700 group-hover:opacity-100"
+                : undefined
+            }
+          />
+        ))}
+      </g>
+    </>
+  );
+}
+
 const posters: Record<string, () => React.ReactElement> = {
+  kasane: LayerPoster,
   spillsense: SpillPoster,
   "tokyo-train-map": TransitPoster,
   apartmentfeesjapan: WardPoster,

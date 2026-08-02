@@ -1,7 +1,7 @@
 /**
  * Portfolio content.
  *
- * Everything here is drawn from the résumé and the project repositories —
+ * Everything here is drawn from the resume and the project repositories —
  * metrics are the real numbers from each codebase, not decoration. Live URLs
  * were verified reachable before being listed; anything without a working
  * deployment links to source only.
@@ -26,11 +26,51 @@ export type Project = {
   metrics: Metric[];
   stack: string[];
   live?: string;
-  repo: string;
+  /** Overrides the "Live site" button label where the deployment is partial. */
+  liveLabel?: string;
+  /** Absent when the repository is private. */
+  repo?: string;
+  /** Stands in for the source link when there is nothing public to link to. */
+  access?: string;
   accent: Accent;
 };
 
 export const featuredProjects: Project[] = [
+  {
+    slug: "kasane",
+    name: "Kasane",
+    tagline: "Self-hosted live JA→EN translator",
+    year: "2026",
+    summary:
+      "A private Japanese-to-English video translator that subtitles a video as it plays and keeps every Japanese word clickable — speech recognition, translation and dictionary lookup all running in your own containers.",
+    highlights: [
+      "Built a streaming pipeline that prepares the first 12 seconds, unlocks playback, then stays ahead of the viewer with bounded overlapping audio windows pushed to the browser over Server-Sent Events — playback is never paused to catch up.",
+      "Runs the whole inference path locally: faster-whisper for Japanese recognition and English translation, Fugashi with UniDic for tokenising text that has no spaces, and a read-only JMdict SQLite index for readings, definitions and Tatoeba examples. No hosted model API, no key, no metered service.",
+      "Made repeat work free — public analyses are fingerprinted by video ID and inference profile, results are reused for 24 hours, and concurrent requests for the same video share one in-flight task. Uploads are never placed in the shared cache.",
+      "Kept recovery boring: Redis holds durable job snapshots so a dropped SSE connection falls back to adaptive polling instead of restarting the job.",
+    ],
+    metrics: [
+      { value: "12 s", label: "to first playback" },
+      { value: "24 h", label: "result reuse window" },
+      { value: "0", label: "hosted model APIs" },
+    ],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "Celery",
+      "Redis",
+      "faster-whisper",
+      "Docker",
+    ],
+    live: "https://japanese-live-transcriber.vercel.app",
+    // The public deployment serves the studio interface; inference is meant to
+    // run on the viewer's own worker, so this is not a working demo.
+    liveLabel: "Live interface",
+    access: "Private repository — walkthrough on request",
+    accent: "flare",
+  },
   {
     slug: "spillsense",
     name: "SpillSense",
@@ -188,20 +228,6 @@ export const sideProjects: SideProject[] = [
     stack: "TypeScript · Next.js",
     repo: "https://github.com/jon-jc/language-rooms",
   },
-  {
-    name: "Souls-like Platformer",
-    blurb:
-      "2D souls-like with stamina-gated combat and checkpoint recovery, built in Godot.",
-    stack: "GDScript · C# · Godot",
-    repo: "https://github.com/jon-jc/soulslikeplatformer-godot",
-  },
-  {
-    name: "Horror Pygame",
-    blurb:
-      "First-person horror game with line-of-sight enemy AI and a hand-rolled render loop.",
-    stack: "Python · Pygame",
-    repo: "https://github.com/jon-jc/horror-pygame",
-  },
 ];
 
 export type Logo = {
@@ -343,5 +369,5 @@ export const skillGroups: SkillGroup[] = [
 export const stats: Metric[] = [
   { value: "3+", label: "Years shipping production React" },
   { value: "55%", label: "Sales lift from purchase-flow rework" },
-  { value: "4", label: "Systems built end to end, live now" },
+  { value: "5", label: "Systems built end to end, schema to UI" },
 ];

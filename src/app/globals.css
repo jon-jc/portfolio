@@ -89,7 +89,7 @@
   --color-flare: var(--flare);
 
   /* Instrument Sans for interface and body — a grotesque with slightly
-     narrow proportions, so long résumé prose stays compact without feeling
+     narrow proportions, so long resume prose stays compact without feeling
      cramped. Fraunces carries the display voice; JetBrains Mono the data. */
   --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-src), ui-monospace, "SFMono-Regular", monospace;
@@ -311,7 +311,7 @@
 
 /* ==========================================================================
    Print
-   The résumé route is the one page meant to leave the browser. Force the
+   The resume route is the one page meant to leave the browser. Force the
    light palette regardless of theme, drop the decorative layers, and let the
    browser's own Save as PDF produce the file.
    ========================================================================== */

@@ -14,9 +14,9 @@ export default function Home() {
       <main id="main" className="flex-1">
         <Hero />
         <Work />
-        <Lab />
-        <About />
         <Experience />
+        <About />
+        <Lab />
         <Stack />
         <Contact />
       </main>

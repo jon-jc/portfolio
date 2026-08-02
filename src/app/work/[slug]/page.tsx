@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Lock } from "lucide-react";
 
 import { SubNav } from "@/components/layout/SubNav";
 import { GithubIcon } from "@/components/ui/BrandIcons";
@@ -92,20 +92,32 @@ export default async function CaseStudyPage({ params }: PageProps) {
                     data-cursor-label="Visit"
                     className="group inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-ink transition-shadow hover:shadow-[0_0_44px_-6px_var(--glow)]"
                   >
-                    Open the live site
+                    {project.liveLabel
+                      ? `Open the ${project.liveLabel.toLowerCase()}`
+                      : "Open the live site"}
                     <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
                 ) : null}
-                <a
-                  href={project.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor-label="Code"
-                  className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-3 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
-                >
-                  <GithubIcon className="size-4" />
-                  Read the source
-                </a>
+
+                {project.repo ? (
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor-label="Code"
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-3 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
+                  >
+                    <GithubIcon className="size-4" />
+                    Read the source
+                  </a>
+                ) : null}
+
+                {project.access ? (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-line px-5 py-3 text-sm text-ink-faint">
+                    <Lock className="size-3.5" />
+                    {project.access}
+                  </span>
+                ) : null}
               </div>
             </Reveal>
           </div>

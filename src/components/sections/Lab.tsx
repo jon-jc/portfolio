@@ -9,7 +9,7 @@ export function Lab() {
   return (
     <Section
       id="lab"
-      index="02"
+      index="04"
       eyebrow="The lab"
       title={
         <>

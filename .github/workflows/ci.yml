@@ -16,7 +16,7 @@ env:
 
 jobs:
   verify:
-    name: Lint, typecheck, build
+    name: Lint, test, build, typecheck
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -35,6 +35,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Test
+        run: npm test
 
       # Build first: Next generates route types into .next/types, which
       # tsconfig.json pulls into the program for `tsc --noEmit`.

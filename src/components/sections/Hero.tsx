@@ -169,7 +169,7 @@ export function Hero() {
                   className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-3 text-sm font-medium text-ink-muted transition-colors hover:border-line-hi hover:text-ink"
                 >
                   <FileText className="size-4" />
-                  Résumé
+                  Resume
                 </a>
               </Magnetic>
 

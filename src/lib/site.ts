@@ -22,11 +22,16 @@ export const site = {
   },
 } as const;
 
+/**
+ * Order matters twice over: it is the reading order of the page and the order
+ * `useActiveSection` walks, so this list and the section order in `page.tsx`
+ * have to stay in step.
+ */
 export const navItems = [
   { id: "work", label: "Work" },
-  { id: "lab", label: "Lab" },
-  { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
+  { id: "about", label: "About" },
+  { id: "lab", label: "Lab" },
   { id: "stack", label: "Stack" },
   { id: "contact", label: "Contact" },
 ] as const;

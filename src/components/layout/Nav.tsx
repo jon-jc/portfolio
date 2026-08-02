@@ -35,13 +35,23 @@ export function Nav() {
   }, []);
 
   // A resize into desktop layout would otherwise leave the mobile sheet open
-  // and body scroll locked.
+  // and body scroll locked. Escape closes it, the way any dialog should.
   useEffect(() => {
     if (!menuOpen) return;
+
     const media = window.matchMedia("(min-width: 768px)");
     const close = () => setMenuOpen(false);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
     media.addEventListener("change", close);
-    return () => media.removeEventListener("change", close);
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      media.removeEventListener("change", close);
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [menuOpen]);
 
   return (
@@ -78,7 +88,9 @@ export function Nav() {
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  aria-current={isActive ? "true" : undefined}
+                  // "location" rather than "page": these are positions within
+                  // the current document, not separate pages.
+                  aria-current={isActive ? "location" : undefined}
                   className={cn(
                     "relative rounded-full px-3.5 py-1.5 text-sm transition-colors duration-300",
                     isActive ? "text-ink" : "text-ink-faint hover:text-ink-muted",
@@ -121,6 +133,9 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.24 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             className="fixed inset-0 z-[70] bg-canvas/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex h-16 items-center justify-end px-6">
